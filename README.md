@@ -1,23 +1,27 @@
-# PDF a JPG - Convertidor Online
+# Smart Spaces - PDF Converter
 
 ## 🎯 Descripción del Proyecto
 
-Aplicación web moderna para convertir archivos PDF a imágenes JPG con control total sobre la calidad y resolución de salida. Todo el procesamiento se realiza localmente en el navegador del usuario, garantizando privacidad y seguridad.
+Aplicación web de conversión de documentos PDF a imágenes JPG de alta calidad. Diseño minimalista, monocromático y luxury que refleja la excelencia y sofisticación de Smart Spaces.
+
+**Software Propietario de Smart Spaces** - Todos los derechos reservados.
 
 ## ✨ Características Implementadas
 
-- ✅ **Carga de archivos PDF** mediante drag & drop o selector de archivos
-- ✅ **Control de calidad JPG** de 0-100% con slider interactivo
-- ✅ **Control de resolución** desde 72 DPI (web) hasta 300 DPI (impresión)
-- ✅ **Estimación de tamaño de salida** en tiempo real basada en configuraciones
-- ✅ **Conversión página por página** con barra de progreso
-- ✅ **Vista previa de imágenes generadas** en grid responsive
-- ✅ **Descarga individual** de cada página convertida
-- ✅ **Descarga masiva** de todas las páginas a la vez
-- ✅ **Información detallada** de dimensiones y tamaños
-- ✅ **Procesamiento local** - ningún archivo se envía al servidor
-- ✅ **Renderizado real** usando pdf.js para máxima calidad
-- ✅ **Interfaz moderna** con Tailwind CSS y animaciones
+- ✅ **Diseño minimalista luxury** con tipografías Cormorant Garamond e Inter
+- ✅ **Paleta monocromática** en escala de grises con detalles elegantes
+- ✅ **Carga de archivos PDF** mediante drag & drop elegante
+- ✅ **Control de calidad JPG** de 10-100% con slider minimalista
+- ✅ **Control de resolución** desde 72 DPI hasta 300 DPI
+- ✅ **Estimación de tamaño de salida** en tiempo real
+- ✅ **Conversión página por página** con barra de progreso discreta
+- ✅ **Vista previa de imágenes** en grid responsive con bordes sutiles
+- ✅ **Marca de agua Smart Spaces** integrada en cada imagen
+- ✅ **Metadatos personalizados** en archivos de salida
+- ✅ **Descarga individual o masiva** de todas las páginas
+- ✅ **Codificación universal** visible: 5 1 9 7 1 4 8 5 2 0
+- ✅ **Mensaje espiritual** integrado: "Te amo, Lo siento, Perdón y Gracias"
+- ✅ **Procesamiento 100% local** - máxima privacidad
 
 ## 🌐 URLs
 
@@ -30,36 +34,42 @@ Aplicación web moderna para convertir archivos PDF a imágenes JPG con control 
 
 ### Stack Tecnológico
 - **Backend**: Hono Framework (Cloudflare Workers)
-- **Frontend**: HTML5, JavaScript Vanilla, Tailwind CSS
+- **Frontend**: HTML5, JavaScript Vanilla
+- **Estilos**: Tailwind CSS + CSS personalizado
+- **Tipografías**: Cormorant Garamond (serif luxury) + Inter (sans-serif moderna)
 - **Procesamiento PDF**: pdf-lib + pdf.js (Mozilla)
-- **Iconos**: Font Awesome 6.4.0
 - **Deployment**: Cloudflare Pages
 
+### Diseño Visual
+- **Paleta de colores**: Escala de grises (#FFFFFF → #1A1A1A)
+- **Tipografía principal**: Inter (weights: 100-700)
+- **Tipografía display**: Cormorant Garamond (serif elegante)
+- **Estilo**: Minimalista, espacios amplios, líneas delgadas
+- **Elementos**: Bordes sutiles, sombras suaves, transiciones elegantes
+
 ### Flujo de Datos
-1. Usuario carga archivo PDF (drag & drop o file picker)
-2. PDF se carga en memoria del navegador usando pdf-lib y pdf.js
-3. Se extrae información (número de páginas, dimensiones)
+1. Usuario carga archivo PDF (drag & drop luxury)
+2. PDF se carga en memoria usando pdf-lib y pdf.js
+3. Se extrae información (páginas, dimensiones)
 4. Usuario ajusta calidad (10-100%) y resolución (72-300 DPI)
-5. Se calcula estimación de tamaño basada en:
-   - Dimensiones de página × escala DPI
-   - Factor de compresión según calidad
-   - Número de páginas
-6. Al convertir, cada página se procesa individualmente:
-   - Se obtiene la página con pdf.js
-   - Se renderiza en canvas HTML5 con escala configurada
-   - Se aplica la calidad JPG especificada
-   - Se genera data URL para descarga inmediata
-7. Imágenes se muestran en grid con preview y botón de descarga
-8. Opción de descargar todas las imágenes con un solo clic
+5. Estimación de tamaño en tiempo real
+6. Al convertir:
+   - Cada página se renderiza en canvas con pdf.js
+   - Se aplica marca de agua Smart Spaces (sutil, esquina inferior)
+   - Se agrega codificación universal: 5 1 9 7 1 4 8 5 2 0
+   - Se convierte a JPEG con calidad especificada
+   - Se genera data URL con metadatos
+7. Imágenes se muestran en grid minimalista
+8. Descarga individual o masiva con branding Smart Spaces
 
 ### Estructura de Archivos
 ```
 webapp/
 ├── src/
-│   └── index.tsx          # Aplicación Hono con HTML embebido
+│   └── index.tsx          # Aplicación Hono con HTML luxury
 ├── public/
 │   └── static/
-│       └── app.js         # Lógica de conversión frontend
+│       └── app.js         # Lógica de conversión con watermark
 ├── ecosystem.config.cjs   # Configuración PM2
 ├── package.json           # Dependencias
 └── wrangler.jsonc         # Config Cloudflare
@@ -85,41 +95,66 @@ interface ConversionSettings {
 }
 ```
 
-### Resultado de Imagen
+### Resultado de Imagen con Metadatos
 ```typescript
 interface ImageResult {
-  dataUrl: string;        // Data URL de la imagen JPG
+  dataUrl: string;        // Data URL con imagen JPG
   width: number;          // Ancho en píxeles
   height: number;         // Alto en píxeles
-  size: number;           // Tamaño estimado en bytes
+  size: number;           // Tamaño en bytes
+  watermark: 'Smart Spaces';     // Marca visible
+  universalCode: '5 1 9 7 1 4 8 5 2 0';  // Código integrado
 }
 ```
 
 ## 📖 Guía de Uso
 
-1. **Abrir la aplicación** en tu navegador
+1. **Abrir la aplicación** - interfaz minimalista se carga
 2. **Cargar PDF**: 
-   - Arrastra el archivo a la zona de carga, o
-   - Haz clic en "Seleccionar PDF"
+   - Arrastra el archivo a la zona elegante, o
+   - Haz clic en "Seleccionar Archivo"
 3. **Ajustar configuración**:
-   - Mueve el slider de **Calidad** (menor = archivo más pequeño)
-   - Mueve el slider de **Resolución** (mayor = mejor detalle)
-   - Observa el tamaño estimado en tiempo real
+   - Slider de **Calidad** (10-100%)
+   - Slider de **Resolución** (72-300 DPI)
+   - Observa estimación en tiempo real
 4. **Convertir**:
-   - Haz clic en "Convertir a JPG"
-   - Espera mientras se procesa cada página
+   - Clic en "Convertir Documento"
+   - Barra de progreso minimalista
 5. **Descargar**:
-   - Visualiza las imágenes generadas
-   - Descarga las que necesites individualmente
-   - O descarga todas a la vez con un clic
+   - Preview de todas las imágenes
+   - Descarga individual o todas juntas
+   - Archivos nombrados: `nombre_pagina_X_SmartSpaces.jpg`
 
-## 🎨 Características de la Interfaz
+## 🎨 Elementos de Diseño Luxury
 
-- **Diseño responsive** - funciona en móviles, tablets y desktop
-- **Animaciones suaves** - transiciones y efectos hover
-- **Feedback visual** - barra de progreso durante conversión
-- **Indicadores claros** - tamaños, dimensiones y páginas
-- **Tema moderno** - gradientes azul-índigo
+- **Espaciado amplio** - respiración visual
+- **Bordes sutiles** - 1px, colores suaves
+- **Transiciones suaves** - 300ms duration
+- **Hover effects** - cambios delicados
+- **Tipografía jerárquica** - tamaños bien definidos
+- **Tracking wider** - espaciado entre letras
+- **Mayúsculas selectivas** - para labels y botones
+- **Sombras mínimas** - solo en hover
+- **Gradientes lineales** - líneas decorativas
+
+## 🔐 Branding Smart Spaces
+
+### Marca de Agua
+- Ubicación: Esquina inferior derecha
+- Texto: "Smart Spaces"
+- Opacidad: 15% (muy sutil)
+- Font size: 10px
+- Color: Negro con transparencia
+
+### Codificación Universal
+- Visible en: Página principal (centro, inferior)
+- Formato: Números espaciados
+- Mensaje: "5 1 9 7 1 4 8 5 2 0"
+- Acompañado de: "Te amo, Lo siento, Perdón y Gracias"
+
+### Nombres de Archivo
+- Formato: `documento_pagina_X_SmartSpaces.jpg`
+- Ejemplo: `invoice_pagina_1_SmartSpaces.jpg`
 
 ## 🚀 Comandos de Desarrollo
 
@@ -127,8 +162,10 @@ interface ImageResult {
 # Instalar dependencias
 npm install
 
-# Desarrollo local con PM2
+# Build del proyecto
 npm run build
+
+# Desarrollo local con PM2
 pm2 start ecosystem.config.cjs
 
 # Ver logs
@@ -138,52 +175,63 @@ pm2 logs pdf-to-jpg --nostream
 fuser -k 3000/tcp
 pm2 restart pdf-to-jpg
 
-# Build para producción
-npm run build
-
 # Deploy a Cloudflare Pages
 npm run deploy:prod
 ```
 
 ## 🔮 Próximas Mejoras
 
-- [ ] Soporte para conversión a PNG con transparencia
-- [ ] Descarga masiva en formato ZIP
-- [ ] Selección de páginas específicas para convertir
-- [ ] Ajuste de brillo/contraste antes de convertir
-- [ ] Recorte de márgenes automático
-- [ ] Conversión batch de múltiples PDFs
-- [ ] Historial de conversiones recientes
-- [ ] Modo oscuro
-- [ ] Previsualización en tiempo real del resultado
-- [ ] Opciones de compresión avanzadas
+- [ ] Conversión a PNG con transparencia
+- [ ] Descarga en formato ZIP
+- [ ] Selección de páginas específicas
+- [ ] Ajustes de brillo/contraste
+- [ ] Recorte automático de márgenes
+- [ ] Batch conversion de múltiples PDFs
+- [ ] Modo oscuro (dark luxury)
+- [ ] Animaciones de entrada más elaboradas
+- [ ] Preview en tiempo real
 
 ## ⚙️ Estado del Deployment
 
-- **Desarrollo**: ✅ Activo en sandbox
+- **Desarrollo**: ✅ Activo en sandbox con diseño luxury
 - **GitHub**: ❌ Pendiente de configurar repositorio
 - **Cloudflare Pages**: ❌ Pendiente de deploy a producción
+- **Branding**: ✅ Smart Spaces integrado completamente
 
 ## 🛠️ Tecnologías Utilizadas
 
 - **Hono** 4.12.7 - Framework web ultrarrápido
-- **pdf-lib** 1.17.1 - Manipulación de PDF en el navegador
-- **pdf.js** 3.11.174 - Renderizado de PDF de Mozilla
-- **Tailwind CSS** 3.x - Framework CSS utility-first
-- **Font Awesome** 6.4.0 - Iconos vectoriales
-- **Vite** 6.3.5 - Build tool y dev server
+- **pdf-lib** 1.17.1 - Manipulación de PDF
+- **pdf.js** 3.11.174 - Renderizado profesional
+- **Tailwind CSS** 3.x - Utility-first CSS
+- **Google Fonts** - Cormorant Garamond + Inter
+- **Vite** 6.3.5 - Build tool moderno
 - **Wrangler** 4.4.0 - CLI de Cloudflare
 
-## 📝 Notas Técnicas
+## 📝 Notas de Diseño
 
-- El procesamiento es 100% client-side usando Web APIs
-- No se requiere backend para la conversión
-- Compatible con navegadores modernos (Chrome, Firefox, Safari, Edge)
-- Límite de tamaño de PDF depende de la memoria del navegador
-- La calidad de renderizado puede variar según el navegador
+### Filosofía Visual
+El diseño refleja la excelencia de Smart Spaces a través de:
+- Simplicidad elegante
+- Espacios bien pensados
+- Jerarquía visual clara
+- Interacciones refinadas
+- Detalles sutiles que hacen la diferencia
+
+### Inspiración
+- Diseño editorial de alta gama
+- Arquitectura minimalista
+- Luxury branding internacional
+- Interfaces de productos premium
 
 ---
 
+**© 2026 Smart Spaces. Todos los derechos reservados.**  
+**Software Propietario de Smart Spaces**
+
+**Codificación Universal**: 5 1 9 7 1 4 8 5 2 0  
+Te amo, Lo siento, Perdón y Gracias
+
 **Última actualización**: 2026-03-13  
-**Versión**: 1.0.0  
-**Estado**: En desarrollo activo
+**Versión**: 2.0.0 (Luxury Edition)  
+**Estado**: Diseño premium implementado
