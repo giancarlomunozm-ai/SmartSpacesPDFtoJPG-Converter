@@ -1,5 +1,6 @@
 let currentPDF = null;
 let pdfDocument = null;
+let pdfJsDocument = null;
 let currentQuality = 85;
 let currentResolution = 150;
 
@@ -59,10 +60,16 @@ async function handleFileSelect(event) {
     document.getElementById('fileInfo').classList.remove('hidden');
     document.getElementById('uploadArea').classList.add('hidden');
 
-    // Load PDF
+    // Load PDF with both libraries
     try {
         const arrayBuffer = await file.arrayBuffer();
+        
+        // Load with pdf-lib for info
         pdfDocument = await PDFLib.PDFDocument.load(arrayBuffer);
+        
+        // Load with pdf.js for rendering
+        const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+        pdfJsDocument = await loadingTask.promise;
         
         const pageCount = pdfDocument.getPageCount();
         const firstPage = pdfDocument.getPage(0);
@@ -113,7 +120,7 @@ function updateEstimatedSize() {
 }
 
 async function convertPDF() {
-    if (!pdfDocument) return;
+    if (!pdfJsDocument) return;
 
     const convertBtn = document.getElementById('convertBtn');
     const progressSection = document.getElementById('progressSection');
@@ -132,39 +139,66 @@ async function convertPDF() {
     progressSection.classList.remove('hidden');
     progressBar.style.width = '0%';
 
-    const pageCount = pdfDocument.getPageCount();
+    const pageCount = pdfJsDocument.numPages;
     const images = [];
 
     try {
-        for (let i = 0; i < pageCount; i++) {
-            progressText.textContent = `Convirtiendo página ${i + 1} de ${pageCount}...`;
-            progressBar.style.width = `${((i + 1) / pageCount) * 100}%`;
+        for (let pageNum = 1; pageNum <= pageCount; pageNum++) {
+            progressText.textContent = `Convirtiendo página ${pageNum} de ${pageCount}...`;
+            progressBar.style.width = `${(pageNum / pageCount) * 100}%`;
 
-            // Extract page
-            const singlePagePdf = await PDFLib.PDFDocument.create();
-            const [copiedPage] = await singlePagePdf.copyPages(pdfDocument, [i]);
-            singlePagePdf.addPage(copiedPage);
+            // Get page
+            const page = await pdfJsDocument.getPage(pageNum);
+            
+            // Calculate scale based on DPI
+            const viewport = page.getViewport({ scale: 1.0 });
+            const scale = currentResolution / 72;
+            const scaledViewport = page.getViewport({ scale });
 
-            // Convert to image
-            const pdfBytes = await singlePagePdf.save();
-            const imageData = await pdfToImage(pdfBytes, i);
-            images.push(imageData);
+            // Create canvas
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = scaledViewport.width;
+            canvas.height = scaledViewport.height;
+
+            // Render PDF page to canvas
+            const renderContext = {
+                canvasContext: context,
+                viewport: scaledViewport
+            };
+            
+            await page.render(renderContext).promise;
+
+            // Convert canvas to JPEG with quality
+            const dataUrl = canvas.toDataURL('image/jpeg', currentQuality / 100);
+            
+            // Calculate actual size
+            const base64Length = dataUrl.split(',')[1].length;
+            const actualSize = Math.round((base64Length * 3) / 4);
+
+            images.push({
+                dataUrl,
+                width: canvas.width,
+                height: canvas.height,
+                size: actualSize,
+                pageNum
+            });
 
             // Small delay to update UI
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await new Promise(resolve => setTimeout(resolve, 50));
         }
 
         // Show results
         progressSection.classList.add('hidden');
         results.classList.remove('hidden');
 
-        images.forEach((imgData, index) => {
-            const card = createImageCard(imgData, index + 1);
+        images.forEach((imgData) => {
+            const card = createImageCard(imgData);
             imageGrid.appendChild(card);
         });
 
-        // Success message
-        progressText.textContent = '¡Conversión completada!';
+        // Show download all button
+        addDownloadAllButton(images);
         
     } catch (error) {
         console.error('Error converting PDF:', error);
@@ -175,106 +209,19 @@ async function convertPDF() {
     }
 }
 
-async function pdfToImage(pdfBytes, pageIndex) {
-    return new Promise((resolve, reject) => {
-        // Create a blob URL for the PDF
-        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-        const url = URL.createObjectURL(blob);
-
-        // Create iframe to render PDF
-        const iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        document.body.appendChild(iframe);
-        iframe.src = url;
-
-        iframe.onload = async () => {
-            try {
-                // Wait for PDF to render
-                await new Promise(resolve => setTimeout(resolve, 500));
-
-                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                const canvas = iframeDoc.querySelector('canvas') || await renderPDFToCanvas(pdfBytes);
-                
-                // Convert canvas to JPEG with quality settings
-                const scale = currentResolution / 72; // 72 DPI is base
-                const scaledCanvas = document.createElement('canvas');
-                const page = await getPageFromPDF(pdfBytes);
-                
-                scaledCanvas.width = page.width * scale;
-                scaledCanvas.height = page.height * scale;
-                
-                const ctx = scaledCanvas.getContext('2d');
-                ctx.scale(scale, scale);
-                
-                // Render using canvas API
-                const imageDataUrl = await renderPDFPageToDataURL(pdfBytes, scale);
-                
-                // Cleanup
-                document.body.removeChild(iframe);
-                URL.revokeObjectURL(url);
-
-                resolve({
-                    dataUrl: imageDataUrl,
-                    width: scaledCanvas.width,
-                    height: scaledCanvas.height,
-                    size: Math.round(imageDataUrl.length * 0.75) // Approximate size
-                });
-            } catch (error) {
-                document.body.removeChild(iframe);
-                URL.revokeObjectURL(url);
-                reject(error);
-            }
-        };
-    });
-}
-
-async function renderPDFPageToDataURL(pdfBytes, scale) {
-    // Create canvas for rendering
-    const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
-    const page = pdfDoc.getPage(0);
-    const { width, height } = page.getSize();
-    
-    const canvas = document.createElement('canvas');
-    canvas.width = width * scale;
-    canvas.height = height * scale;
-    const ctx = canvas.getContext('2d');
-    
-    // Draw white background
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Add text indicating this is a preview
-    ctx.fillStyle = '#333';
-    ctx.font = `${20 * scale}px Arial`;
-    ctx.textAlign = 'center';
-    ctx.fillText('Vista previa de conversión', canvas.width / 2, canvas.height / 2);
-    ctx.font = `${14 * scale}px Arial`;
-    ctx.fillText(`${Math.round(width * scale)} × ${Math.round(height * scale)} px`, canvas.width / 2, canvas.height / 2 + 30 * scale);
-    ctx.fillText(`Calidad: ${currentQuality}%`, canvas.width / 2, canvas.height / 2 + 50 * scale);
-    
-    // Convert to JPEG with quality
-    return canvas.toDataURL('image/jpeg', currentQuality / 100);
-}
-
-async function getPageFromPDF(pdfBytes) {
-    const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
-    const page = pdfDoc.getPage(0);
-    return page.getSize();
-}
-
-function createImageCard(imgData, pageNum) {
+function createImageCard(imgData) {
     const card = document.createElement('div');
     card.className = 'bg-gray-50 rounded-lg p-4 border-2 border-gray-200 hover:border-blue-400 transition-all';
     
     card.innerHTML = `
         <div class="aspect-[3/4] mb-3 bg-white rounded overflow-hidden flex items-center justify-center">
-            <img src="${imgData.dataUrl}" alt="Página ${pageNum}" class="max-w-full max-h-full object-contain">
+            <img src="${imgData.dataUrl}" alt="Página ${imgData.pageNum}" class="max-w-full max-h-full object-contain">
         </div>
         <div class="space-y-2">
-            <p class="font-semibold text-gray-800">Página ${pageNum}</p>
+            <p class="font-semibold text-gray-800">Página ${imgData.pageNum}</p>
             <p class="text-xs text-gray-600">${imgData.width} × ${imgData.height} px</p>
             <p class="text-xs text-gray-600">${formatBytes(imgData.size)}</p>
-            <button onclick="downloadImage('${imgData.dataUrl}', ${pageNum})" 
+            <button onclick='downloadImage(\`${imgData.dataUrl}\`, ${imgData.pageNum})' 
                     class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition-all">
                 <i class="fas fa-download mr-2"></i>
                 Descargar
@@ -283,6 +230,25 @@ function createImageCard(imgData, pageNum) {
     `;
     
     return card;
+}
+
+function addDownloadAllButton(images) {
+    const results = document.getElementById('results');
+    
+    // Check if button already exists
+    if (document.getElementById('downloadAllBtn')) return;
+    
+    const buttonContainer = document.createElement('div');
+    buttonContainer.className = 'mt-6';
+    buttonContainer.innerHTML = `
+        <button id="downloadAllBtn" onclick='downloadAll(${JSON.stringify(images.map(img => ({ dataUrl: img.dataUrl, pageNum: img.pageNum })))})' 
+                class="w-full bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700 text-white font-bold py-4 px-8 rounded-xl transition-all transform hover:scale-105 shadow-lg">
+            <i class="fas fa-download mr-2"></i>
+            Descargar Todas las Imágenes (${images.length})
+        </button>
+    `;
+    
+    results.appendChild(buttonContainer);
 }
 
 function downloadImage(dataUrl, pageNum) {
@@ -295,9 +261,26 @@ function downloadImage(dataUrl, pageNum) {
     document.body.removeChild(link);
 }
 
+function downloadAll(images) {
+    const fileName = currentPDF.name.replace('.pdf', '');
+    
+    // Download each image with a small delay
+    images.forEach((img, index) => {
+        setTimeout(() => {
+            const link = document.createElement('a');
+            link.href = img.dataUrl;
+            link.download = `${fileName}_pagina_${img.pageNum}.jpg`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }, index * 300); // 300ms delay between downloads
+    });
+}
+
 function resetUpload() {
     currentPDF = null;
     pdfDocument = null;
+    pdfJsDocument = null;
     document.getElementById('fileInput').value = '';
     document.getElementById('fileInfo').classList.add('hidden');
     document.getElementById('controls').classList.add('hidden');
