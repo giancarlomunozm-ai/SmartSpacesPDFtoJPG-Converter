@@ -13,13 +13,16 @@ Aplicación web moderna para convertir archivos PDF a imágenes JPG con control 
 - ✅ **Conversión página por página** con barra de progreso
 - ✅ **Vista previa de imágenes generadas** en grid responsive
 - ✅ **Descarga individual** de cada página convertida
+- ✅ **Descarga masiva** de todas las páginas a la vez
 - ✅ **Información detallada** de dimensiones y tamaños
 - ✅ **Procesamiento local** - ningún archivo se envía al servidor
+- ✅ **Renderizado real** usando pdf.js para máxima calidad
 - ✅ **Interfaz moderna** con Tailwind CSS y animaciones
 
 ## 🌐 URLs
 
 - **Desarrollo (Sandbox)**: https://3000-imkosxcdcm9xz1pt3lqd4-8f57ffe2.sandbox.novita.ai
+- **Backup del Proyecto**: https://www.genspark.ai/api/files/s/lLVpi9c3
 - **GitHub**: (Pendiente de configurar)
 - **Producción**: (Pendiente de deploy a Cloudflare Pages)
 
@@ -28,13 +31,13 @@ Aplicación web moderna para convertir archivos PDF a imágenes JPG con control 
 ### Stack Tecnológico
 - **Backend**: Hono Framework (Cloudflare Workers)
 - **Frontend**: HTML5, JavaScript Vanilla, Tailwind CSS
-- **Procesamiento PDF**: pdf-lib (librería client-side)
+- **Procesamiento PDF**: pdf-lib + pdf.js (Mozilla)
 - **Iconos**: Font Awesome 6.4.0
 - **Deployment**: Cloudflare Pages
 
 ### Flujo de Datos
 1. Usuario carga archivo PDF (drag & drop o file picker)
-2. PDF se carga en memoria del navegador usando pdf-lib
+2. PDF se carga en memoria del navegador usando pdf-lib y pdf.js
 3. Se extrae información (número de páginas, dimensiones)
 4. Usuario ajusta calidad (10-100%) y resolución (72-300 DPI)
 5. Se calcula estimación de tamaño basada en:
@@ -42,11 +45,12 @@ Aplicación web moderna para convertir archivos PDF a imágenes JPG con control 
    - Factor de compresión según calidad
    - Número de páginas
 6. Al convertir, cada página se procesa individualmente:
-   - Se crea PDF de una sola página
-   - Se renderiza a canvas con escala configurada
-   - Se convierte a JPEG con calidad especificada
-   - Se genera data URL para descarga
+   - Se obtiene la página con pdf.js
+   - Se renderiza en canvas HTML5 con escala configurada
+   - Se aplica la calidad JPG especificada
+   - Se genera data URL para descarga inmediata
 7. Imágenes se muestran en grid con preview y botón de descarga
+8. Opción de descargar todas las imágenes con un solo clic
 
 ### Estructura de Archivos
 ```
@@ -107,6 +111,7 @@ interface ImageResult {
 5. **Descargar**:
    - Visualiza las imágenes generadas
    - Descarga las que necesites individualmente
+   - O descarga todas a la vez con un clic
 
 ## 🎨 Características de la Interfaz
 
@@ -142,14 +147,16 @@ npm run deploy:prod
 
 ## 🔮 Próximas Mejoras
 
-- [ ] Soporte para conversión a PNG
-- [ ] Descarga masiva (ZIP con todas las páginas)
+- [ ] Soporte para conversión a PNG con transparencia
+- [ ] Descarga masiva en formato ZIP
 - [ ] Selección de páginas específicas para convertir
 - [ ] Ajuste de brillo/contraste antes de convertir
 - [ ] Recorte de márgenes automático
 - [ ] Conversión batch de múltiples PDFs
 - [ ] Historial de conversiones recientes
 - [ ] Modo oscuro
+- [ ] Previsualización en tiempo real del resultado
+- [ ] Opciones de compresión avanzadas
 
 ## ⚙️ Estado del Deployment
 
@@ -161,6 +168,7 @@ npm run deploy:prod
 
 - **Hono** 4.12.7 - Framework web ultrarrápido
 - **pdf-lib** 1.17.1 - Manipulación de PDF en el navegador
+- **pdf.js** 3.11.174 - Renderizado de PDF de Mozilla
 - **Tailwind CSS** 3.x - Framework CSS utility-first
 - **Font Awesome** 6.4.0 - Iconos vectoriales
 - **Vite** 6.3.5 - Build tool y dev server
