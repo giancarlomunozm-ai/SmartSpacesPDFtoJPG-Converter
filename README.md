@@ -16,11 +16,12 @@ Aplicación web de conversión de documentos PDF a imágenes JPG de alta calidad
 - ✅ **Estimación de tamaño de salida** en tiempo real
 - ✅ **Conversión página por página** con barra de progreso discreta
 - ✅ **Vista previa de imágenes** en grid responsive con bordes sutiles
-- ✅ **Marca de agua Smart Spaces** integrada en cada imagen
-- ✅ **Metadatos personalizados** en archivos de salida
+- ✅ **Marca de agua Smart Spaces** integrada sutilmente en cada imagen
+- ✅ **Metadatos ocultos** en cada JPG generado:
+  - Codificación universal: 5197148520
+  - Mensaje espiritual: "Te amo, Lo siento, Perdón y Gracias"
+  - Marca Smart Spaces (casi invisible al ojo humano)
 - ✅ **Descarga individual o masiva** de todas las páginas
-- ✅ **Codificación universal** visible: 5 1 9 7 1 4 8 5 2 0
-- ✅ **Mensaje espiritual** integrado: "Te amo, Lo siento, Perdón y Gracias"
 - ✅ **Procesamiento 100% local** - máxima privacidad
 
 ## 🌐 URLs
@@ -96,15 +97,17 @@ interface ConversionSettings {
 }
 ```
 
-### Resultado de Imagen con Metadatos
+### Resultado de Imagen con Metadatos Ocultos
 ```typescript
 interface ImageResult {
   dataUrl: string;        // Data URL con imagen JPG
   width: number;          // Ancho en píxeles
   height: number;         // Alto en píxeles
   size: number;           // Tamaño en bytes
-  watermark: 'Smart Spaces';     // Marca visible
-  universalCode: '5 1 9 7 1 4 8 5 2 0';  // Código integrado
+  // Metadatos invisibles embebidos en la imagen:
+  watermark: 'Smart Spaces';     // Opacity 8% - casi invisible
+  universalCode: '5197148520';   // Opacity 5% - nivel metadatos
+  spiritualMessage: 'Te amo Lo siento Perdón Gracias'; // Opacity 3%
 }
 ```
 
@@ -140,22 +143,27 @@ interface ImageResult {
 
 ## 🔐 Branding Smart Spaces
 
-### Marca de Agua
-- Ubicación: Esquina inferior derecha
-- Texto: "Smart Spaces"
-- Opacidad: 15% (muy sutil)
-- Font size: 10px
-- Color: Negro con transparencia
+### Marca de Agua (Invisible al Ojo Humano)
+- **Ubicación**: Esquina inferior derecha
+- **Capas de información embebida**:
+  1. "Smart Spaces" (opacity 8%, 9px) - Apenas visible
+  2. "5197148520" (opacity 5%, 7px) - Nivel metadatos
+  3. "Te amo Lo siento Perdón Gracias" (opacity 3%, 6px) - Invisible
+- **Propósito**: Identificación digital sin interferir visualmente
+- **Detección**: Requiere análisis digital o zoom extremo
 
-### Codificación Universal
-- Visible en: Página principal (centro, inferior)
-- Formato: Números espaciados
-- Mensaje: "5 1 9 7 1 4 8 5 2 0"
-- Acompañado de: "Te amo, Lo siento, Perdón y Gracias"
+### Filosofía de Metadatos Ocultos
+Los metadatos están diseñados para ser **invisibles al ojo humano** pero presentes digitalmente:
+- ✅ **No interfieren** con el contenido visual
+- ✅ **Mantienen limpieza** estética del documento
+- ✅ **Identifican autoría** de Smart Spaces a nivel digital
+- ✅ **Contienen codificación** universal y mensaje espiritual
+- ✅ **Preservan profesionalismo** del documento convertido
 
 ### Nombres de Archivo
-- Formato: `documento_pagina_X_SmartSpaces.jpg`
-- Ejemplo: `invoice_pagina_1_SmartSpaces.jpg`
+- **Formato**: `documento_pagina_X_SmartSpaces.jpg`
+- **Ejemplo**: `invoice_pagina_1_SmartSpaces.jpg`
+- **Identificación**: Clara propiedad de Smart Spaces en el nombre
 
 ## 🚀 Comandos de Desarrollo
 
@@ -230,9 +238,11 @@ El diseño refleja la excelencia de Smart Spaces a través de:
 **© 2026 Smart Spaces. Todos los derechos reservados.**  
 **Software Propietario de Smart Spaces**
 
-**Codificación Universal**: 5 1 9 7 1 4 8 5 2 0  
-Te amo, Lo siento, Perdón y Gracias
+**Metadatos Embebidos** (Invisibles al ojo humano):
+- Codificación Universal: 5197148520
+- Mensaje Espiritual: Te amo, Lo siento, Perdón y Gracias
+- Marca de Agua: Smart Spaces
 
 **Última actualización**: 2026-03-13  
-**Versión**: 2.0.0 (Luxury Edition)  
-**Estado**: Diseño premium implementado
+**Versión**: 2.1.0 (Luxury Edition - Metadatos Ocultos)  
+**Estado**: Diseño premium con identificación digital invisible
