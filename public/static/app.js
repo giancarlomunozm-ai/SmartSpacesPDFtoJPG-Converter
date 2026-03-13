@@ -106,6 +106,16 @@ function updateEstimatedSize() {
     const widthPx = Math.round((width / 72) * dpi);
     const heightPx = Math.round((height / 72) * dpi);
 
+    // Check Miro limits (32MP = 8192x4096 max)
+    const MAX_WIDTH = 8192;
+    const MAX_HEIGHT = 4096;
+    const MAX_MEGAPIXELS = 32;
+    const currentMegapixels = (widthPx * heightPx) / 1000000;
+    
+    const exceedsWidth = widthPx > MAX_WIDTH;
+    const exceedsHeight = heightPx > MAX_HEIGHT;
+    const exceedsMegapixels = currentMegapixels > MAX_MEGAPIXELS;
+
     // Estimate file size (rough calculation)
     // JPG compression varies, but we can estimate based on quality
     const pixelCount = widthPx * heightPx;
@@ -120,6 +130,47 @@ function updateEstimatedSize() {
     document.getElementById('estimatedSize').textContent = formatBytes(totalSize);
     document.getElementById('estimatedDimensions').textContent = 
         `${widthPx} × ${heightPx} px por página`;
+
+    // Show or hide warning
+    let warningEl = document.getElementById('miroWarning');
+    
+    if (exceedsWidth || exceedsHeight || exceedsMegapixels) {
+        if (!warningEl) {
+            warningEl = document.createElement('div');
+            warningEl.id = 'miroWarning';
+            warningEl.className = 'mt-4 p-4 border border-red-200 bg-red-50 fade-in';
+            document.getElementById('controls').appendChild(warningEl);
+        }
+        
+        let warningMessage = '';
+        if (exceedsWidth || exceedsHeight) {
+            warningMessage = `<p class="text-xs text-red-700 font-light mb-2">
+                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                <strong>Advertencia:</strong> Las dimensiones exceden el límite de Miro (8192×4096 px)
+            </p>`;
+        } else if (exceedsMegapixels) {
+            warningMessage = `<p class="text-xs text-red-700 font-light mb-2">
+                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                <strong>Advertencia:</strong> La imagen excede 32MP (límite de Miro)
+            </p>`;
+        }
+        
+        warningMessage += `<p class="text-xs text-red-600 font-light mb-2">
+            Actual: ${widthPx}×${heightPx} px (${currentMegapixels.toFixed(1)} MP)
+        </p>`;
+        warningMessage += `<p class="text-xs text-gray-600 font-light">
+            Reduce la resolución para cumplir con el límite de 32MP (8192×4096 px)
+        </p>`;
+        
+        warningEl.innerHTML = warningMessage;
+        warningEl.classList.remove('hidden');
+    } else if (warningEl) {
+        warningEl.classList.add('hidden');
+    }
 }
 
 async function convertPDF() {
