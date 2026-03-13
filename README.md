@@ -28,9 +28,9 @@ Aplicación web de conversión de documentos PDF a imágenes JPG de alta calidad
 ## 🌐 URLs
 
 - **Desarrollo (Sandbox)**: https://3000-imkosxcdcm9xz1pt3lqd4-8f57ffe2.sandbox.novita.ai
+- **GitHub Repository**: https://github.com/giancarlomunozm-ai/SmartSpacesPDFtoJPG-Converter
 - **Backup Final (Con Límites Miro)**: https://www.genspark.ai/api/files/s/2vr08ROx
 - **Backup Anterior (Metadatos Ocultos)**: https://www.genspark.ai/api/files/s/6plwJHyP
-- **GitHub**: (Pendiente de configurar)
 - **Producción**: (Pendiente de deploy a Cloudflare Pages)
 
 ## 🏗️ Arquitectura Técnica
@@ -234,9 +234,10 @@ npm run deploy:prod
 ## ⚙️ Estado del Deployment
 
 - **Desarrollo**: ✅ Activo en sandbox con diseño luxury
-- **GitHub**: ❌ Pendiente de configurar repositorio
+- **GitHub**: ✅ Código subido a https://github.com/giancarlomunozm-ai/SmartSpacesPDFtoJPG-Converter
 - **Cloudflare Pages**: ❌ Pendiente de deploy a producción
 - **Branding**: ✅ Smart Spaces integrado completamente
+- **Sistema de Advertencias**: ✅ Límites de Miro implementados
 
 ## 🛠️ Tecnologías Utilizadas
 
