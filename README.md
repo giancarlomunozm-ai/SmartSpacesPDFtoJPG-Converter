@@ -14,6 +14,7 @@ Aplicación web de conversión de documentos PDF a imágenes JPG de alta calidad
 - ✅ **Control de calidad JPG** de 10-100% con slider minimalista
 - ✅ **Control de resolución** desde 72 DPI hasta 300 DPI
 - ✅ **Estimación de tamaño de salida** en tiempo real
+- ✅ **Advertencia de límites de Miro** (32MP/8192×4096 px) automática
 - ✅ **Conversión página por página** con barra de progreso discreta
 - ✅ **Vista previa de imágenes** en grid responsive con bordes sutiles
 - ✅ **Marca de agua Smart Spaces** integrada sutilmente en cada imagen
@@ -122,6 +123,7 @@ interface ImageResult {
    - Slider de **Calidad** (10-100%)
    - Slider de **Resolución** (72-300 DPI)
    - Observa estimación en tiempo real
+   - ⚠️ Si excedes 32MP o 8192×4096 px, verás advertencia de límite de Miro
 4. **Convertir**:
    - Clic en "Convertir Documento"
    - Barra de progreso minimalista
@@ -141,6 +143,35 @@ interface ImageResult {
 - **Mayúsculas selectivas** - para labels y botones
 - **Sombras mínimas** - solo en hover
 - **Gradientes lineales** - líneas decorativas
+
+## ⚠️ Sistema de Advertencias
+
+### Límites de Miro
+La aplicación detecta automáticamente cuando las dimensiones estimadas exceden los límites de Miro:
+
+**Límites Máximos**:
+- 📏 **Ancho**: 8192 píxeles
+- 📏 **Alto**: 4096 píxeles  
+- 🖼️ **Megapíxeles**: 32 MP (8192×4096)
+
+**Advertencia Automática**:
+- Se muestra en **tiempo real** mientras ajustas la resolución
+- Aparece con **borde rojo** y fondo sutil
+- Muestra dimensiones actuales vs. límites
+- Sugiere reducir resolución para cumplir límites
+- Desaparece automáticamente cuando estás dentro de los límites
+
+**Ejemplo de Advertencia**:
+```
+⚠️ Advertencia: Las dimensiones exceden el límite de Miro (8192×4096 px)
+Actual: 10240×7680 px (78.6 MP)
+Reduce la resolución para cumplir con el límite de 32MP (8192×4096 px)
+```
+
+**Recomendaciones**:
+- Para documentos A4: Usa 150 DPI (seguro para Miro)
+- Para documentos grandes: Usa 72-120 DPI
+- Para impresión: Usa 300 DPI solo si es necesario (puede exceder límites)
 
 ## 🔐 Branding Smart Spaces
 
@@ -245,5 +276,5 @@ El diseño refleja la excelencia de Smart Spaces a través de:
 - Marca de Agua: Smart Spaces
 
 **Última actualización**: 2026-03-13  
-**Versión**: 2.1.0 (Luxury Edition - Metadatos Ocultos)  
-**Estado**: Diseño premium con identificación digital invisible
+**Versión**: 2.2.0 (Luxury Edition - Con Advertencias de Límites Miro)  
+**Estado**: Diseño premium con identificación digital invisible + Sistema de advertencias
