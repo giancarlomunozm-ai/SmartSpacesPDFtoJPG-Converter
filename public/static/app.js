@@ -17,16 +17,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Drag and drop
     uploadArea.addEventListener('dragover', (e) => {
         e.preventDefault();
-        uploadArea.classList.add('border-blue-500', 'bg-blue-200');
+        uploadArea.classList.add('border-gray-900');
+        uploadArea.classList.remove('border-gray-300');
     });
 
     uploadArea.addEventListener('dragleave', () => {
-        uploadArea.classList.remove('border-blue-500', 'bg-blue-200');
+        uploadArea.classList.remove('border-gray-900');
+        uploadArea.classList.add('border-gray-300');
     });
 
     uploadArea.addEventListener('drop', (e) => {
         e.preventDefault();
-        uploadArea.classList.remove('border-blue-500', 'bg-blue-200');
+        uploadArea.classList.remove('border-gray-900');
+        uploadArea.classList.add('border-gray-300');
         const files = e.dataTransfer.files;
         if (files.length > 0 && files[0].type === 'application/pdf') {
             fileInput.files = files;
@@ -144,7 +147,7 @@ async function convertPDF() {
 
     try {
         for (let pageNum = 1; pageNum <= pageCount; pageNum++) {
-            progressText.textContent = `Convirtiendo página ${pageNum} de ${pageCount}...`;
+            progressText.textContent = `Procesando página ${pageNum} de ${pageCount}...`;
             progressBar.style.width = `${(pageNum / pageCount) * 100}%`;
 
             // Get page
@@ -168,6 +171,9 @@ async function convertPDF() {
             };
             
             await page.render(renderContext).promise;
+
+            // Add Smart Spaces watermark (subtle, luxury style)
+            addSmartSpacesWatermark(context, canvas.width, canvas.height);
 
             // Convert canvas to JPEG with quality
             const dataUrl = canvas.toDataURL('image/jpeg', currentQuality / 100);
@@ -209,21 +215,45 @@ async function convertPDF() {
     }
 }
 
+function addSmartSpacesWatermark(ctx, width, height) {
+    // Save context state
+    ctx.save();
+    
+    // Add subtle watermark at bottom right
+    ctx.font = '10px Inter, sans-serif';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'bottom';
+    
+    const padding = 20;
+    const text = 'Smart Spaces';
+    ctx.fillText(text, width - padding, height - padding);
+    
+    // Add universal code (very subtle)
+    ctx.font = '8px Inter, sans-serif';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    ctx.fillText('5 1 9 7 1 4 8 5 2 0', width - padding, height - padding - 15);
+    
+    // Restore context state
+    ctx.restore();
+}
+
 function createImageCard(imgData) {
     const card = document.createElement('div');
-    card.className = 'bg-gray-50 rounded-lg p-4 border-2 border-gray-200 hover:border-blue-400 transition-all';
+    card.className = 'border border-gray-200 bg-white hover:shadow-lg transition-all duration-300 fade-in';
     
     card.innerHTML = `
-        <div class="aspect-[3/4] mb-3 bg-white rounded overflow-hidden flex items-center justify-center">
+        <div class="aspect-[3/4] bg-gray-50 flex items-center justify-center overflow-hidden">
             <img src="${imgData.dataUrl}" alt="Página ${imgData.pageNum}" class="max-w-full max-h-full object-contain">
         </div>
-        <div class="space-y-2">
-            <p class="font-semibold text-gray-800">Página ${imgData.pageNum}</p>
-            <p class="text-xs text-gray-600">${imgData.width} × ${imgData.height} px</p>
-            <p class="text-xs text-gray-600">${formatBytes(imgData.size)}</p>
+        <div class="p-4 space-y-3 border-t border-gray-100">
+            <div>
+                <p class="text-xs text-gray-900 font-light">Página ${imgData.pageNum}</p>
+                <p class="text-xs text-gray-500 font-light mt-1">${imgData.width} × ${imgData.height} px</p>
+                <p class="text-xs text-gray-500 font-light">${formatBytes(imgData.size)}</p>
+            </div>
             <button onclick='downloadImage(\`${imgData.dataUrl}\`, ${imgData.pageNum})' 
-                    class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition-all">
-                <i class="fas fa-download mr-2"></i>
+                    class="w-full py-2 text-xs uppercase tracking-wider bg-gray-900 text-white hover:bg-gray-800 transition-colors duration-300 font-light">
                 Descargar
             </button>
         </div>
@@ -239,12 +269,11 @@ function addDownloadAllButton(images) {
     if (document.getElementById('downloadAllBtn')) return;
     
     const buttonContainer = document.createElement('div');
-    buttonContainer.className = 'mt-6';
+    buttonContainer.className = 'mt-8 pt-8 border-t border-gray-200';
     buttonContainer.innerHTML = `
         <button id="downloadAllBtn" onclick='downloadAll(${JSON.stringify(images.map(img => ({ dataUrl: img.dataUrl, pageNum: img.pageNum })))})' 
-                class="w-full bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700 text-white font-bold py-4 px-8 rounded-xl transition-all transform hover:scale-105 shadow-lg">
-            <i class="fas fa-download mr-2"></i>
-            Descargar Todas las Imágenes (${images.length})
+                class="w-full py-4 text-sm uppercase tracking-wider bg-gray-900 text-white hover:bg-gray-800 transition-all duration-300 font-light">
+            Descargar Todas (${images.length})
         </button>
     `;
     
@@ -255,7 +284,7 @@ function downloadImage(dataUrl, pageNum) {
     const fileName = currentPDF.name.replace('.pdf', '');
     const link = document.createElement('a');
     link.href = dataUrl;
-    link.download = `${fileName}_pagina_${pageNum}.jpg`;
+    link.download = `${fileName}_pagina_${pageNum}_SmartSpaces.jpg`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -269,7 +298,7 @@ function downloadAll(images) {
         setTimeout(() => {
             const link = document.createElement('a');
             link.href = img.dataUrl;
-            link.download = `${fileName}_pagina_${img.pageNum}.jpg`;
+            link.download = `${fileName}_pagina_${img.pageNum}_SmartSpaces.jpg`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
