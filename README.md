@@ -27,11 +27,10 @@ Aplicación web de conversión de documentos PDF a imágenes JPG de alta calidad
 
 ## 🌐 URLs
 
-- **Desarrollo (Sandbox)**: https://3000-imkosxcdcm9xz1pt3lqd4-8f57ffe2.sandbox.novita.ai
-- **GitHub Repository**: https://github.com/giancarlomunozm-ai/SmartSpacesPDFtoJPG-Converter
-- **Backup Final (Con Límites Miro)**: https://www.genspark.ai/api/files/s/2vr08ROx
-- **Backup Anterior (Metadatos Ocultos)**: https://www.genspark.ai/api/files/s/6plwJHyP
-- **Producción**: (Pendiente de deploy a Cloudflare Pages)
+- **🚀 Producción**: https://pdf2jpg-smart.pages.dev
+- **🔗 GitHub Repository**: https://github.com/giancarlomunozm-ai/SmartSpacesPDFtoJPG-Converter
+- **🔧 Desarrollo (Sandbox)**: https://3000-imkosxcdcm9xz1pt3lqd4-8f57ffe2.sandbox.novita.ai
+- **💾 Backup Final**: https://www.genspark.ai/api/files/s/2vr08ROx
 
 ## 🏗️ Arquitectura Técnica
 
@@ -219,6 +218,20 @@ pm2 restart pdf-to-jpg
 npm run deploy:prod
 ```
 
+## 🚀 Deploy Automático desde GitHub
+
+**Cloudflare Pages** está configurado para deploy automático:
+- ✅ Cada push a `main` → Deploy automático
+- ✅ URL de producción: https://pdf2jpg-smart.pages.dev
+- ✅ Preview URLs para cada commit
+- ✅ Rollback instantáneo a versiones anteriores
+
+**Para hacer deploy manual:**
+```bash
+npm run build
+npx wrangler pages deploy dist --project-name pdf2jpg-smart
+```
+
 ## 🔮 Próximas Mejoras
 
 - [ ] Conversión a PNG con transparencia
@@ -235,7 +248,7 @@ npm run deploy:prod
 
 - **Desarrollo**: ✅ Activo en sandbox con diseño luxury
 - **GitHub**: ✅ Código subido a https://github.com/giancarlomunozm-ai/SmartSpacesPDFtoJPG-Converter
-- **Cloudflare Pages**: ❌ Pendiente de deploy a producción
+- **Cloudflare Pages**: ✅ DESPLEGADO en https://pdf2jpg-smart.pages.dev
 - **Branding**: ✅ Smart Spaces integrado completamente
 - **Sistema de Advertencias**: ✅ Límites de Miro implementados
 
