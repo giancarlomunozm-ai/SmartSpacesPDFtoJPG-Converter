@@ -219,20 +219,26 @@ function addSmartSpacesWatermark(ctx, width, height) {
     // Save context state
     ctx.save();
     
-    // Add subtle watermark at bottom right
-    ctx.font = '10px Inter, sans-serif';
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+    // Add very subtle watermark at bottom right corner
+    // Subtle enough to be almost invisible but present in metadata
+    ctx.font = '9px Inter, sans-serif';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.08)'; // Very subtle opacity
     ctx.textAlign = 'right';
     ctx.textBaseline = 'bottom';
     
-    const padding = 20;
+    const padding = 15;
     const text = 'Smart Spaces';
     ctx.fillText(text, width - padding, height - padding);
     
-    // Add universal code (very subtle)
-    ctx.font = '8px Inter, sans-serif';
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-    ctx.fillText('5 1 9 7 1 4 8 5 2 0', width - padding, height - padding - 15);
+    // Add universal code (extremely subtle - metadata level)
+    ctx.font = '7px Inter, sans-serif';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // Almost invisible
+    ctx.fillText('5197148520', width - padding, height - padding - 12);
+    
+    // Add spiritual message (invisible - only in metadata)
+    ctx.font = '6px Inter, sans-serif';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.03)'; // Invisible to naked eye
+    ctx.fillText('Te amo Lo siento Perdón Gracias', width - padding, height - padding - 22);
     
     // Restore context state
     ctx.restore();

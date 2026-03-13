@@ -218,24 +218,6 @@ app.get('/', (c) => {
                 </div>
             </div>
 
-            <!-- Universal Code Message -->
-            <div class="text-center mb-8 fade-in">
-                <div class="inline-block border border-gray-200 p-6 bg-gray-50">
-                    <p class="text-xs uppercase tracking-[0.3em] text-gray-500 font-light mb-3">
-                        Codificación Universal
-                    </p>
-                    <p class="font-serif text-2xl tracking-wider text-gray-900 mb-4">
-                        5 1 9 7 1 4 8 5 2 0
-                    </p>
-                    <div class="space-y-1">
-                        <p class="text-sm text-gray-700 font-light">Te amo</p>
-                        <p class="text-sm text-gray-700 font-light">Lo siento</p>
-                        <p class="text-sm text-gray-700 font-light">Perdón</p>
-                        <p class="text-sm text-gray-700 font-light">Gracias</p>
-                    </div>
-                </div>
-            </div>
-
             <!-- Footer -->
             <footer class="text-center border-t border-gray-200 pt-8">
                 <p class="text-xs text-gray-500 font-light mb-2">
