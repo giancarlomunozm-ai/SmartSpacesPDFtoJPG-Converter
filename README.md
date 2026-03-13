@@ -28,9 +28,8 @@ Aplicación web de conversión de documentos PDF a imágenes JPG de alta calidad
 ## 🌐 URLs
 
 - **Desarrollo (Sandbox)**: https://3000-imkosxcdcm9xz1pt3lqd4-8f57ffe2.sandbox.novita.ai
-- **Backup Final (Metadatos Ocultos)**: https://www.genspark.ai/api/files/s/6plwJHyP
-- **Backup Luxury Edition**: https://www.genspark.ai/api/files/s/Yrajtz36
-- **Backup Versión Anterior**: https://www.genspark.ai/api/files/s/lLVpi9c3
+- **Backup Final (Con Límites Miro)**: https://www.genspark.ai/api/files/s/2vr08ROx
+- **Backup Anterior (Metadatos Ocultos)**: https://www.genspark.ai/api/files/s/6plwJHyP
 - **GitHub**: (Pendiente de configurar)
 - **Producción**: (Pendiente de deploy a Cloudflare Pages)
 
